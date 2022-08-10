@@ -68,7 +68,7 @@ async function compareLastNight() {
     var lastNight = await awaitNumberInput();
     hideNumberPanel();
     registerUI.show();
-    var diff = inputsAdd(inputsArray) - lastNight;
+    var diff = Math.round((inputsAdd(inputsArray) - lastNight)*100)/100;
     var lnString = diff.toString();
     if (diff >= 0) lnString = "+" + lnString;
     lnDisp.innerText = `Compared to last night: ${lnString}`;
