@@ -51,18 +51,18 @@ function parseConfig() {
 }
 
 function downloadValues() {
-    if (sessionStorage.getItem("tabletReport")) {
+    if (localStorage.getItem("tabletReport")) {
         tabletsDone = true;
         tabletReport = {};
-        if (tabletsDone) tabletReport = JSON.parse(sessionStorage.getItem("tabletReport"));
+        if (tabletsDone) tabletReport = JSON.parse(localStorage.getItem("tabletReport"));
     } else {
         tabletsDone = false;
         tabletReport = "";
     }
-    p3bcheck.checked = (sessionStorage.getItem("put3Back") && sessionStorage.getItem("put3Back") != 'false');
-    tipSplitOut.innerText = sessionStorage.getItem("tipSplitOut");
-    if (sessionStorage.getItem("config")) {
-        config = JSON.parse(sessionStorage.getItem("config"));
+    p3bcheck.checked = (localStorage.getItem("put3Back") && localStorage.getItem("put3Back") != 'false');
+    tipSplitOut.innerText = localStorage.getItem("tipSplitOut");
+    if (localStorage.getItem("config")) {
+        config = JSON.parse(localStorage.getItem("config"));
     }
 }
 window.addEventListener("load", function() {
@@ -71,33 +71,34 @@ window.addEventListener("load", function() {
     p3bcheck.onclick = function() {
         uploadValues();
     }
+    Array.from(document.getElementsByClassName("masterhr")).forEach(e=>e.hide());
 })
 
 function uploadValues() {
     if (!tabletsDone) {
-        sessionStorage.removeItem("tabletReport");
+        localStorage.removeItem("tabletReport");
         tabletReport = "";
     } else {
-        sessionStorage.setItem("tabletReport", JSON.stringify(tabletReport));
+        localStorage.setItem("tabletReport", JSON.stringify(tabletReport));
     }
-    sessionStorage.setItem("put3Back", p3bcheck.checked);
-    sessionStorage.setItem("tipSplitOut", tipSplitOut.innerText);
-    //sessionStorage.setItem("adjTtl", adjTtl);
-    sessionStorage.setItem("config", JSON.stringify(config));
+    localStorage.setItem("put3Back", p3bcheck.checked);
+    localStorage.setItem("tipSplitOut", tipSplitOut.innerText);
+    //localStorage.setItem("adjTtl", adjTtl);
+    localStorage.setItem("config", JSON.stringify(config));
     //adjTtlBtn.innerText = `Set Adj. Total (current: \$${adjTtl})`;
 }
 
 function clearMemory() {
     if (!confirm("Are you sure you want to clear the memory?")) return;
-    sessionStorage.removeItem("tabletReport");
+    localStorage.removeItem("tabletReport");
     tabletReport = "";
-    sessionStorage.removeItem("put3Back");
+    localStorage.removeItem("put3Back");
     put3Back = false;
-    sessionStorage.removeItem("tipSplitOut");
+    localStorage.removeItem("tipSplitOut");
     tipSplitOut.innerText = "";
-    sessionStorage.removeItem("adjTtl");
+    localStorage.removeItem("adjTtl");
     adjTotal = 0;
-    sessionStorage.removeItem("config");
+    localStorage.removeItem("config");
     alert("Memory Cleared.");
     location.reload();
 }
