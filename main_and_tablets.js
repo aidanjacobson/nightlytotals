@@ -120,17 +120,19 @@ function hideNumberPanel() {
     numberPanel.setAttribute("hidden", true);
 }
 
-async function doTablets() {
+async function doTablets(calc=true) {
     tabletUI.hide();
     hideMainMenu();
     showNumberPanel();
-    var cn = await totalTablet("ChowNow");
-    var dd = await totalTablet("DoorDash");
-    var ue = await totalTablet("UberEats", true);
-    var gh = await totalTablet("GrubHub");
+    if (calc) {
+        tabletReport.cn = await totalTablet("ChowNow");
+        tabletReport.dd = await totalTablet("DoorDash");
+        tabletReport.ue = await totalTablet("UberEats", true);
+        tabletReport.gh = await totalTablet("GrubHub");
+    }
     var now = new Date();
     var dateString = `${now.getMonth()+1}/${now.getDate()}/${now.getFullYear()-2000}`;
-    var total = cn+dd+ue+gh;
+    var total = tabletReport.cn+tabletReport.dd+tabletReport.ue+tabletReport.gh;
     var hour = now.getHours();
     var minute = now.getMinutes();
     var needTime = false;
@@ -140,7 +142,7 @@ async function doTablets() {
     //var totalString = `\$${total}${needTime ? ` @ ${hour-20}:${minute.toString().padStart(2, 0)} PM` : ""}`;
     var totalString = `\$${total}${needTime ? ` @ ${timeString}` : ""}`;
     tabletReport = {
-        dateString, cn, dd, ue, gh, total, totalString
+        dateString, cn:tabletReport.cn, dd:tabletReport.dd, ue:tabletReport.ue, gh:tabletReport.gh, total, totalString
     }
     await displayTabletResults();
 }
@@ -184,9 +186,9 @@ var doneWithTablets = function() {};
 
 async function totalTablet(name, instatotal=false) {
     if (instatotal) {
-        instructions.innerText = `Enter Amount For ${name}`;
+        instructions.innerText = `Enter amount for ${name}`;
         var amount = await awaitNumberInput();
-        instructions.innerText = `Enter Second Amount For ${name}`;
+        instructions.innerText = `Enter second amount for ${name}, or 0 if done`;
         var add = await awaitNumberInput();
         if (add != "") {
             amount = +amount + (+add);
@@ -194,7 +196,7 @@ async function totalTablet(name, instatotal=false) {
         amount = +amount;
         return +amount; // I FUCKING LOVE PLUSSES
     } else {
-        instructions.innerText = `Enter New Amount For ${name}`;
+        instructions.innerText = `Enter new amount for ${name}, or 0 if done`;
         var amount = 0;
         while(true) {
             var newAmount = await awaitNumberInput();
@@ -274,4 +276,18 @@ function closeMaster() {
     Array.from(document.getElementsByClassName("closer")).forEach(e=>e.show());
     Array.from(document.getElementsByClassName("masterhr")).forEach(e=>e.hide());
     closeToMain();
+}
+
+async function tabletManual() {
+    hideEverything();
+    showNumberPanel();
+    instructions.innerText = "Enter ChowNow Total";
+    tabletReport.cn = await awaitNumberInput();
+    instructions.innerText = "Enter DoorDash Total";
+    tabletReport.dd = await awaitNumberInput();
+    instructions.innerText = "Enter UberEats Total";
+    tabletReport.ue = await awaitNumberInput();
+    instructions.innerText = "Enter GrubHub Total";
+    tabletReport.gh = await awaitNumberInput();
+    doTablets(false);
 }

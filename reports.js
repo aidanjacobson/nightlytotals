@@ -60,7 +60,7 @@ function readDepositValues() {
 async function storePurchases() {
     hideEverything();
     showNumberPanel();
-    instructions.innerText = "Enter Store Purchase Amount";
+    instructions.innerText = "Enter Store Purchase Amount, Or 0 If Done";
     var spAmount = 0;
     while(true) {
         var newSPAmount = await awaitNumberInput();
