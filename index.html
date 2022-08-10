@@ -1,0 +1,87 @@
+<html>
+    <head>
+        <script src="main_and_tablets.js"></script>
+        <script src="night_tips.js"></script>
+        <script src="sales.js"></script>
+        <script src="reports.js"></script>
+        <script src="register.js"></script>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div id="mainMenu">
+            <h1 id="timeShow"></h1>
+            <button onclick="showTabletsUI()">Tablets</button><br>
+            <button onclick="nightTips()">Tips</button><br>
+            <!-- <button onclick="sales()">Sales</button><br> -->
+            <button onclick="z1()">Z1 Report</button><br>
+            <button onclick="cc()">CC Report</button><br>
+            <button onclick="deposit()">Create Deposit</button><br>
+            <button onclick="register()">Count Register</button><br>
+            <button onclick="createMasterReport()">Create Master Report</button><br>
+            <button onclick="clearMemory()">Erase Data</button><br>
+        </div>
+        <div id="numberPanel" hidden>
+            <p id="instructions"></p>
+            <input type="number" id="numberInput" />
+        </div>
+        <div id="tabletUI" hidden>
+            <button id="tabletsBtn" onclick="doTablets()">Do Tablets</button><br>
+            <button id="tabletsBtn" onclick="makeTabletReport()">Tablet Report</button><br>
+            <button class="closer" onclick="closeToMain()">Close</button>
+        </div>
+        <div id="tabletOutput" hidden"></div><hr class="masterhr" />
+        <div id="nightTipsUI" hidden>
+            <p id="tipSplitOut"></p>
+            <button onclick="endOfShiftTips()">End Of Shift Tips</button><br>
+            <button class="closer" onclick="closeToMain()">Close</button>
+        </div>
+        <div id="tip3Back" hidden>
+            Put 3 back: <input type="checkbox" id="p3bcheck" />
+        </div><hr class="masterhr" />
+        <div id="salesUI" hidden>
+            <button id="adjTtlBtn" onclick="adjTotal()">Set Adj. Total (current: $0)</button><br>
+            <button onclick="calcSales()">Calculate Sales</button><br>
+            <button class="closer" onclick="closeToMain()">Close</button><br>
+        </div>
+        <div id="depositUI" hidden>
+            <ul>
+                <li>Credit Card:
+                    <ul>
+                        <li>Clover: $<span id="ccClover"></span></li>
+                        <li>Register: $<span id="ccRegister"></span></li>
+                        <li>Clover - Register: $<span id="ccDiffOut"></span></li>
+                    </ul>
+                </li>
+                <li>Sales: $<span id="salesNumber"></span></li>
+                <li>Deposit: $<span id="depositAmount"></span> (<u id="spLink" onclick="storePurchases()">Add Store Purchases</u>)</li><br>
+                <button class="closer" onclick="closeToMain()">Close</button><br>
+            </ul>
+        </div><hr class="masterhr" />
+        <div id="registerUI" hidden>
+            <ul id="regInputList">
+                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_20" value="" /> - $20</li>
+                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_10" value="" /> - $10</li>
+                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_5" value="" /> - $5</li>
+                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_1" value="" /> - $1</li>
+                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_q" value="" /> - Quarters</li>
+                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_d" value="" /> - Dimes</li>
+                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_n" value="" /> - Nickels</li>
+                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_p" value="" /> - Pennies</li>
+                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_under" value="0" /> - Underneath <u class="fakeLink" onclick="increment(event)">Increment</u></li>
+                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_envelope" value="0" /> - Envelope <u class="fakeLink" onclick="increment(event)">Increment</u></li>
+                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_other" value="0" /> - Other <u class="fakeLink" onclick="increment(event)">Increment</u></li>
+            </ul><hr>
+            <ul>
+                <li>Total: $<span id="regTotal"></span></li>
+                <li>Cash Envelope: $<span id="cashEnvTotal"></span></li>
+                <li>Gray Envelope: $<span id="grayEnvTotal"></span></li>
+                <li><u id="lnDisp" class="fakeLink" onclick="compareLastNight()">Compare to last night</u></li>
+            </ul>
+            <button class="closer" onclick="closeToMain()">Close</button><br>
+        </div><hr class="masterhr" />
+        <div id="finalUI" hidden>
+            <button onclick="window.print()">Print</button><br>
+            <button onclick="closeMaster()">Close</button><br>
+        </div>
+    </body>
+</html>
