@@ -1,5 +1,5 @@
 var tabletsDone = false;
-var tabletReport = "";
+var tabletReport = {};
 var put3Back = false;
 var adjTotal = 0;
 
@@ -51,14 +51,17 @@ function parseConfig() {
 }
 
 function downloadValues() {
-    if (localStorage.getItem("tabletReport")) {
+    if (localStorage.getItem("tabletReport") && JSON.parse(localStorage.getItem("tabletReport")) != "") {
         tabletsDone = true;
         tabletReport = {};
-        if (tabletsDone) tabletReport = JSON.parse(localStorage.getItem("tabletReport"));
+        if (tabletsDone) {
+            tabletReport = JSON.parse(localStorage.getItem("tabletReport"));
+        }
     } else {
         tabletsDone = false;
-        tabletReport = "";
+        tabletReport = {};
     }
+    if (tabletReport == "") tabletReport = {};
     p3bcheck.checked = (localStorage.getItem("put3Back") && localStorage.getItem("put3Back") != 'false');
     tipSplitOut.innerText = localStorage.getItem("tipSplitOut");
     if (localStorage.getItem("config")) {
@@ -75,23 +78,16 @@ window.addEventListener("load", function() {
 })
 
 function uploadValues() {
-    if (!tabletsDone) {
-        localStorage.removeItem("tabletReport");
-        tabletReport = "";
-    } else {
-        localStorage.setItem("tabletReport", JSON.stringify(tabletReport));
-    }
+    localStorage.setItem("tabletReport", JSON.stringify(tabletReport));
     localStorage.setItem("put3Back", p3bcheck.checked);
     localStorage.setItem("tipSplitOut", tipSplitOut.innerText);
-    //localStorage.setItem("adjTtl", adjTtl);
     localStorage.setItem("config", JSON.stringify(config));
-    //adjTtlBtn.innerText = `Set Adj. Total (current: \$${adjTtl})`;
 }
 
 function clearMemory() {
     if (!confirm("Are you sure you want to clear the memory?")) return;
     localStorage.removeItem("tabletReport");
-    tabletReport = "";
+    tabletReport = {};
     localStorage.removeItem("put3Back");
     put3Back = false;
     localStorage.removeItem("tipSplitOut");
@@ -141,9 +137,12 @@ async function doTablets(calc=true) {
     }
     //var totalString = `\$${total}${needTime ? ` @ ${hour-20}:${minute.toString().padStart(2, 0)} PM` : ""}`;
     var totalString = `\$${total}${needTime ? ` @ ${timeString}` : ""}`;
-    tabletReport = {
+    /*tabletReport = {
         dateString, cn:tabletReport.cn, dd:tabletReport.dd, ue:tabletReport.ue, gh:tabletReport.gh, total, totalString
-    }
+    }*/
+    tabletReport.dateString = dateString;
+    tabletReport.total = total,
+    tabletReport.totalString = totalString;
     await displayTabletResults();
 }
 
@@ -166,18 +165,18 @@ function displayTabletResults() {
     });
 }
 
-function convertTabletReport({dateString, cn, dd, ue, gh, total, totalString}) {
+function convertTabletReport(tReport) {
     return `
-        <h1>Tablet Totals ${dateString}</h1>
+        <h1>Tablet Totals ${tReport.dateString}</h1>
         <hr>
         <ul>
-            <li>ChowNow: \$${cn}</li>
-            <li>DoorDash: \$${dd}</li>
-            <li>UberEats: \$${ue}</li>
-            <li>GrubHub: \$${gh}</li>
+            <li>ChowNow: \$${tReport.cn}</li>
+            <li>DoorDash: \$${tReport.dd}</li>
+            <li>UberEats: \$${tReport.ue}</li>
+            <li>GrubHub: \$${tReport.gh}</li>
         </ul>
         <hr>
-        Total: ${totalString}<br>
+        Total: ${tReport.totalString}<br>
         <button class="closer" onclick="doneWithTablets()">Click Here To Finish</button>
     `
 }
@@ -212,7 +211,6 @@ function awaitNumberInput() {
         numberInput.onchange = function() {
             var ret = numberInput.value;
             numberInput.value = "";
-            console.log(ret);
             resolve(+ret);
         }
     });
@@ -282,12 +280,14 @@ async function tabletManual() {
     hideEverything();
     showNumberPanel();
     instructions.innerText = "Enter ChowNow Total";
-    tabletReport.cn = await awaitNumberInput();
+    var cn = await awaitNumberInput();
     instructions.innerText = "Enter DoorDash Total";
-    tabletReport.dd = await awaitNumberInput();
+    var dd = await awaitNumberInput();
     instructions.innerText = "Enter UberEats Total";
-    tabletReport.ue = await awaitNumberInput();
+    var ue = await awaitNumberInput();
     instructions.innerText = "Enter GrubHub Total";
-    tabletReport.gh = await awaitNumberInput();
+    var gh = await awaitNumberInput();
+    tabletReport = {cn, dd, ue, gh, dateString:"", total:0, totalString:""};
+    uploadValues();
     doTablets(false);
 }
