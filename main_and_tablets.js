@@ -46,7 +46,6 @@ function parseConfig() {
             inputsArray[i].value = config.register.values[i];
         }
     }
-    lnDisp.innerText = config.register.compared;
     readRegInputs();
     readDepositValues();
 }

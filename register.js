@@ -57,6 +57,8 @@ function readRegInputs() {
     cashEnvTotal.innerText = inputsAdd(cashInputs);
     grayEnvTotal.innerText = count_envelope.value;
     config.register.values = values(inputsArray);
+    if (config.register.compared == "") config.register.compared = "Compare to last night"
+    config.register.compared = lnDisp.innerText;
 }
 
 async function compareLastNight() {
