@@ -55,6 +55,11 @@ function readDepositValues() {
     ccDiffOut.innerText = Math.floor((ccDiff)*100)/100;
     salesNumber.innerText = Math.floor((config.z1.adjTtl + tabletReport.total)*100)/100;
     depositAmount.innerText = Math.floor((config.z1.cashInDrawer - config.cc.tips - config.z1.storePurchases)*100)/100;
+    rawVals.children[0].innerText = `Adj. Total - ${config.z1.adjTtl}`;
+    rawVals.children[1].innerText = `Misc1 Tender - ${config.z1.ccTend}`;
+    rawVals.children[2].innerText = `Cash In Drawer - ${config.z1.cashInDrawer}`;
+    rawVals.children[3].innerText = `CC Net - ${config.cc.net}`;
+    rawVals.children[4].innerText = `CC Tips - ${config.cc.tips}`;
 }
 
 async function storePurchases() {

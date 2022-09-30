@@ -33,6 +33,7 @@
         <div id="tabletOutput" hidden"></div><hr class="masterhr" />
         <div id="nightTipsUI" hidden>
             <p id="tipSplitOut"></p>
+            <p id="remainingCents"></p>
             <button onclick="endOfShiftTips()">End Of Shift Tips</button><br>
             <button class="closer" onclick="closeToMain()">Close</button>
         </div>
@@ -54,24 +55,34 @@
                     </ul>
                 </li>
                 <li>Sales: $<span id="salesNumber"></span></li>
-                <li>Deposit: $<span id="depositAmount"></span> (<u id="spLink" onclick="storePurchases()">Add Store Purchases</u>)</li><br>
-                <button class="closer" onclick="closeToMain()">Close</button><br>
+                <li>Deposit: $<span id="depositAmount"></span> (<u id="spLink" onclick="storePurchases()">Add Store Purchases</u>)</li><br><br>
+                <li>Raw Values:
+                    <ul id="rawVals">
+                        <li>Adj. Total</li>
+                        <li>Misc1 Tender</li>
+                        <li>Cash In Drawer</li>
+                        <li>CC Net</li>
+                        <li>CC Tips</li>
+                    </ul>
+                </li><br>
             </ul>
+            <button class="closer" onclick="closeToMain()">Close</button><br>
         </div><hr class="masterhr" />
         <div id="registerUI" hidden>
             <ul id="regInputList">
-                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_20" value="" /> - $20</li>
-                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_10" value="" /> - $10</li>
-                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_5" value="" /> - $5</li>
-                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_1" value="" /> - $1</li>
-                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_q" value="" /> - Quarters</li>
-                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_d" value="" /> - Dimes</li>
-                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_n" value="" /> - Nickels</li>
-                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_p" value="" /> - Pennies</li>
-                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_under" value="0" /> - Underneath <u class="fakeLink" onclick="increment(event)">Increment</u></li>
-                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_envelope" value="0" /> - Envelope <u class="fakeLink" onclick="increment(event)">Increment</u></li>
-                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_other" value="0" /> - Other <u class="fakeLink" onclick="increment(event)">Increment</u></li>
-            </ul><hr>
+                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_20" value="" /> - $20 <u class="fakeLink" onclick="increment(event)">Increment</u> <u class="fakeLink" onclick="decrement(event)">Decrement</u></li>
+                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_10" value="" /> - $10 <u class="fakeLink" onclick="increment(event)">Increment</u> <u class="fakeLink" onclick="decrement(event)">Decrement</u></li>
+                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_5" value="" /> - $5 <u class="fakeLink" onclick="increment(event)">Increment</u> <u class="fakeLink" onclick="decrement(event)">Decrement</u></li>
+                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_1" value="" /> - $1 <u class="fakeLink" onclick="increment(event)">Increment</u> <u class="fakeLink" onclick="decrement(event)">Decrement</u></li>
+                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_q" value="" /> - Quarters <u class="fakeLink" onclick="increment(event)">Increment</u> <u class="fakeLink" onclick="decrement(event)">Decrement</u></li>
+                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_d" value="" /> - Dimes <u class="fakeLink" onclick="increment(event)">Increment</u> <u class="fakeLink" onclick="decrement(event)">Decrement</u></li>
+                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_n" value="" /> - Nickels <u class="fakeLink" onclick="increment(event)">Increment</u> <u class="fakeLink" onclick="decrement(event)">Decrement</u></li>
+                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_p" value="" /> - Pennies <u class="fakeLink" onclick="increment(event)">Increment</u> <u class="fakeLink" onclick="decrement(event)">Decrement</u></li>
+                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_under" value="0" /> - Underneath <u class="fakeLink" onclick="increment(event)">Increment</u> <u class="fakeLink" onclick="decrement(event)">Decrement</u></li>
+                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_envelope" value="0" /> - Envelope <u class="fakeLink" onclick="increment(event)">Increment</u> <u class="fakeLink" onclick="decrement(event)">Decrement</u></li>
+                <li>$<input type="number" class="countNum" onchange="regInputChange()" id="count_other" value="0" /> - Other <u class="fakeLink" onclick="increment(event)">Increment</u> <u class="fakeLink" onclick="decrement(event)">Decrement</u></li>
+            </ul>
+            <hr>
             <ul>
                 <li>Total: $<span id="regTotal"></span></li>
                 <li>Cash Envelope: $<span id="cashEnvTotal"></span></li>

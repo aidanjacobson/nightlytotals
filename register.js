@@ -21,6 +21,18 @@ async function increment(event) {
     uploadValues();
 }
 
+async function decrement(event) {
+    hideEverything();
+    showNumberPanel();
+    var currentValue = +event.target.previousElementSibling.value;
+    instructions.innerText = "Decremend by how much?";
+    var amt = await awaitNumberInput();
+    event.target.previousElementSibling.value = currentValue - amt;
+    hideNumberPanel();
+    registerUI.show();
+    uploadValues();
+}
+
 window.addEventListener("load", function() {
     inputsArray = [count_20, count_10, count_5, count_1, count_q, count_d, count_n, count_p, count_under, count_envelope, count_other];
     cashInputs = [count_20,count_10,count_5,count_1];
@@ -65,7 +77,9 @@ async function compareLastNight() {
     hideEverything();
     showNumberPanel();
     instructions.innerText = "Enter last night";
-    var lastNight = await awaitNumberInput();
+    var defaultValue = 200;
+    if (config.register.compared != "") defaultValue = -config.register.compared.substring(24);
+    var lastNight = await awaitNumberInput(defaultValue);
     hideNumberPanel();
     registerUI.show();
     var diff = Math.round((inputsAdd(inputsArray) - lastNight)*100)/100;

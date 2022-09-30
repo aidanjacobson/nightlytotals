@@ -64,8 +64,8 @@ function downloadValues() {
     if (tabletReport == "") tabletReport = {};
     p3bcheck.checked = (localStorage.getItem("put3Back") && localStorage.getItem("put3Back") != 'false');
     tipSplitOut.innerText = localStorage.getItem("tipSplitOut");
-    if (localStorage.getItem("config")) {
-        config = JSON.parse(localStorage.getItem("config"));
+    if (localStorage.getItem("config_c")) {
+        config = JSON.parse(localStorage.getItem("config_c"));
     }
 }
 window.addEventListener("load", function() {
@@ -81,7 +81,7 @@ function uploadValues() {
     localStorage.setItem("tabletReport", JSON.stringify(tabletReport));
     localStorage.setItem("put3Back", p3bcheck.checked);
     localStorage.setItem("tipSplitOut", tipSplitOut.innerText);
-    localStorage.setItem("config", JSON.stringify(config));
+    localStorage.setItem("config_c", JSON.stringify(config));
 }
 
 function clearMemory() {
@@ -94,7 +94,7 @@ function clearMemory() {
     tipSplitOut.innerText = "";
     localStorage.removeItem("adjTtl");
     adjTotal = 0;
-    localStorage.removeItem("config");
+    localStorage.removeItem("config_c");
     alert("Memory Cleared.");
     location.reload();
 }
@@ -123,12 +123,13 @@ async function doTablets(calc=true) {
     if (calc) {
         tabletReport.cn = await totalTablet("ChowNow");
         tabletReport.dd = await totalTablet("DoorDash");
-        tabletReport.ue = await totalTablet("UberEats", true);
+        tabletReport.ue = await totalTablet("UberEats");
         tabletReport.gh = await totalTablet("GrubHub");
     }
     var now = new Date();
     var dateString = `${now.getMonth()+1}/${now.getDate()}/${now.getFullYear()-2000}`;
     var total = tabletReport.cn+tabletReport.dd+tabletReport.ue+tabletReport.gh;
+    total = roundCents(total);
     var hour = now.getHours();
     var minute = now.getMinutes();
     var needTime = false;
@@ -206,7 +207,8 @@ async function totalTablet(name, instatotal=false) {
     }
 }
 
-function awaitNumberInput() {
+function awaitNumberInput(defaultValue="") {
+    if (defaultValue != "") numberInput.value = defaultValue;
     return new Promise(function(resolve) {
         numberInput.onchange = function() {
             var ret = numberInput.value;
@@ -273,6 +275,7 @@ function createMasterReport() {
 function closeMaster() {
     Array.from(document.getElementsByClassName("closer")).forEach(e=>e.show());
     Array.from(document.getElementsByClassName("masterhr")).forEach(e=>e.hide());
+    tip3Back.hide();
     closeToMain();
 }
 
@@ -287,7 +290,15 @@ async function tabletManual() {
     var ue = await awaitNumberInput();
     instructions.innerText = "Enter GrubHub Total";
     var gh = await awaitNumberInput();
+    cn = roundCents(cn);
+    dd = roundCents(dd);
+    ue = roundCents(ue);
+    gh = roundCents(gh);
     tabletReport = {cn, dd, ue, gh, dateString:"", total:0, totalString:""};
     uploadValues();
     doTablets(false);
+}
+
+function roundCents(number) {
+    return Math.round(number*100)/100;
 }
