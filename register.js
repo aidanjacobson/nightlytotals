@@ -34,8 +34,8 @@ async function decrement(event) {
 }
 
 window.addEventListener("load", function() {
-    inputsArray = [count_20, count_10, count_5, count_1, count_q, count_d, count_n, count_p, count_under, count_envelope, count_other];
-    cashInputs = [count_20,count_10,count_5,count_1];
+    inputsArray = [count_20, count_10, count_5, count_1, count_q, count_d, count_n, count_p, count_under, count_envelope, count_other, count_big];
+    cashInputs = [count_20, count_10, count_5, count_1, count_big];
 });
 var inputsArray = [];
 var cashInputs = [];
