@@ -13,7 +13,7 @@ async function increment(event) {
     hideEverything();
     showNumberPanel();
     var currentValue = +event.target.previousElementSibling.value;
-    instructions.innerText = "Increment by how much?";
+    instructions.innerText = `Increment ${event.target.previousElementSibling.getAttribute("data-name")} by how much?`;
     var amt = await awaitNumberInput();
     event.target.previousElementSibling.value = currentValue + amt;
     hideNumberPanel();
@@ -24,10 +24,10 @@ async function increment(event) {
 async function decrement(event) {
     hideEverything();
     showNumberPanel();
-    var currentValue = +event.target.previousElementSibling.value;
-    instructions.innerText = "Decremend by how much?";
+    var currentValue = +event.target.previousElementSibling.previousElementSibling.value;
+    instructions.innerText = `Decrement ${event.target.previousElementSibling.previousElementSibling.getAttribute("data-name")} by how much?`;
     var amt = await awaitNumberInput();
-    event.target.previousElementSibling.value = currentValue - amt;
+    event.target.previousElementSibling.previousElementSibling.value = currentValue - amt;
     hideNumberPanel();
     registerUI.show();
     uploadValues();
