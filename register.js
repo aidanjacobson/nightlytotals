@@ -18,7 +18,7 @@ async function increment(event) {
     event.target.previousElementSibling.value = currentValue + amt;
     hideNumberPanel();
     registerUI.show();
-    uploadValues();
+    regInputChange();
 }
 
 async function decrement(event) {
@@ -30,7 +30,7 @@ async function decrement(event) {
     event.target.previousElementSibling.previousElementSibling.value = currentValue - amt;
     hideNumberPanel();
     registerUI.show();
-    uploadValues();
+    regInputChange();
 }
 
 window.addEventListener("load", function() {
