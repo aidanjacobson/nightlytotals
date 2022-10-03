@@ -1,7 +1,4 @@
-var tabletsDone = false;
-var tabletReport = {};
 var put3Back = false;
-var adjTotal = 0;
 
 function hideEverything() {
     hideMainMenu();
@@ -14,29 +11,53 @@ function hideEverything() {
     depositUI.hide();
     registerUI.hide();
     finalUI.hide();
+    sequenceUI.hide();
 }
 
 function closeToMain() {
     hideEverything();
-    showMainMenu();
+    if (sequenceRunning) {
+        resolveFunc();
+    } else {
+        showMainMenu();
+    }
 }
 
 var config = {
     z1: {
-        done: false,
         adjTtl: 0,
         ccTend: 0,
         cashInDrawer: 0,
         storePurchases: 0
     },
     cc: {
-        done: false,
         net: 0,
         tips: 0
     },
     register: {
         values: [],
         compared: ""
+    },
+    tablets: {
+        cn: 0,
+        dd: 0,
+        ue: 0,
+        gh: 0,
+        total: 0,
+        totalString: "",
+        dateString: ""
+    },
+    completed: {
+        tablets: false,
+        tips: false,
+        put3Back: false,
+        z1: false,
+        cc: false,
+        register: false
+    },
+    tips: {
+        tipSplitOut: "",
+        remainingCents: ""
     }
 }
 
@@ -51,26 +72,16 @@ function parseConfig() {
 }
 
 function downloadValues() {
-    if (localStorage.getItem("tabletReport") && JSON.parse(localStorage.getItem("tabletReport")) != "") {
-        tabletsDone = true;
-        tabletReport = {};
-        if (tabletsDone) {
-            tabletReport = JSON.parse(localStorage.getItem("tabletReport"));
-        }
-    } else {
-        tabletsDone = false;
-        tabletReport = {};
-    }
-    if (tabletReport == "") tabletReport = {};
-    p3bcheck.checked = (localStorage.getItem("put3Back") && localStorage.getItem("put3Back") != 'false');
-    tipSplitOut.innerText = localStorage.getItem("tipSplitOut");
     if (localStorage.getItem("config_c")) {
         config = JSON.parse(localStorage.getItem("config_c"));
     }
+    p3bcheck.checked = config.completed.put3Back;
+    renderTips();
 }
 window.addEventListener("load", function() {
     updateTime();
     downloadValues();
+    renderTips();
     p3bcheck.onclick = function() {
         uploadValues();
     }
@@ -78,22 +89,12 @@ window.addEventListener("load", function() {
 })
 
 function uploadValues() {
-    localStorage.setItem("tabletReport", JSON.stringify(tabletReport));
-    localStorage.setItem("put3Back", p3bcheck.checked);
-    localStorage.setItem("tipSplitOut", tipSplitOut.innerText);
+    config.completed.put3Back = p3bcheck.checked;
     localStorage.setItem("config_c", JSON.stringify(config));
 }
 
 function clearMemory() {
     if (!confirm("Are you sure you want to clear the memory?")) return;
-    localStorage.removeItem("tabletReport");
-    tabletReport = {};
-    localStorage.removeItem("put3Back");
-    put3Back = false;
-    localStorage.removeItem("tipSplitOut");
-    tipSplitOut.innerText = "";
-    localStorage.removeItem("adjTtl");
-    adjTotal = 0;
     localStorage.removeItem("config_c");
     alert("Memory Cleared.");
     location.reload();
@@ -121,30 +122,26 @@ async function doTablets(calc=true) {
     hideMainMenu();
     showNumberPanel();
     if (calc) {
-        tabletReport.cn = await totalTablet("ChowNow");
-        tabletReport.dd = await totalTablet("DoorDash");
-        tabletReport.ue = await totalTablet("UberEats");
-        tabletReport.gh = await totalTablet("GrubHub");
+        config.tablets.cn = await totalTablet("ChowNow");
+        config.tablets.dd = await totalTablet("DoorDash");
+        config.tablets.ue = await totalTablet("UberEats");
+        config.tablets.gh = await totalTablet("GrubHub");
     }
     var now = new Date();
     var dateString = `${now.getMonth()+1}/${now.getDate()}/${now.getFullYear()-2000}`;
-    var total = tabletReport.cn+tabletReport.dd+tabletReport.ue+tabletReport.gh;
-    total = roundCents(total);
+    config.tablets.total = config.tablets.cn+config.tablets.dd+config.tablets.ue+config.tablets.gh;
+    config.tablets.total = roundCents(config.tablets.total);
     var hour = now.getHours();
     var minute = now.getMinutes();
     var needTime = false;
     if (hour < 20 || hour == 20 && minute < 30) {
         needTime = true;
     }
-    //var totalString = `\$${total}${needTime ? ` @ ${hour-20}:${minute.toString().padStart(2, 0)} PM` : ""}`;
-    var totalString = `\$${total}${needTime ? ` @ ${timeString}` : ""}`;
-    /*tabletReport = {
-        dateString, cn:tabletReport.cn, dd:tabletReport.dd, ue:tabletReport.ue, gh:tabletReport.gh, total, totalString
-    }*/
-    tabletReport.dateString = dateString;
-    tabletReport.total = total,
-    tabletReport.totalString = totalString;
-    await displayTabletResults();
+    var totalString = `\$${config.tablets.total}${needTime ? ` @ ${timeString}` : ""}`;
+    config.tablets.dateString = dateString;
+    config.tablets.totalString = totalString;
+    uploadValues();
+    if (!sequenceRunning) await displayTabletResults();
 }
 
 function makeTabletReport() {
@@ -154,8 +151,8 @@ function makeTabletReport() {
 function displayTabletResults() {
     hideEverything();
     tabletOutput.removeAttribute("hidden");
-    tabletOutput.innerHTML = convertTabletReport(tabletReport);
-    tabletsDone = true;
+    tabletOutput.innerHTML = convertTabletReport(config.tablets);
+    config.completed.tablets = true;
     uploadValues();
     return new Promise(function(resolve) {
         doneWithTablets = function() {
@@ -262,7 +259,7 @@ function showTabletsUI() {
 function createMasterReport() {
     parseConfig();
     hideEverything();
-    tabletOutput.innerHTML = convertTabletReport(tabletReport);
+    tabletOutput.innerHTML = convertTabletReport(config.tablets);
     tabletOutput.show();
     tip3Back.show();
     depositUI.show();
@@ -294,7 +291,7 @@ async function tabletManual() {
     dd = roundCents(dd);
     ue = roundCents(ue);
     gh = roundCents(gh);
-    tabletReport = {cn, dd, ue, gh, dateString:"", total:0, totalString:""};
+    config.tablets = {cn, dd, ue, gh, dateString:"", total:0, totalString:""};
     uploadValues();
     doTablets(false);
 }

@@ -71,6 +71,7 @@ function readRegInputs() {
     config.register.values = values(inputsArray);
     if (config.register.compared == "") config.register.compared = "Compare to last night"
     config.register.compared = lnDisp.innerText;
+    config.completed.register = true;
 }
 
 async function compareLastNight() {

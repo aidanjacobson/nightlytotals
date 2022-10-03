@@ -5,6 +5,7 @@
         <script src="sales.js"></script>
         <script src="reports.js"></script>
         <script src="register.js"></script>
+        <script src="sequence.js"></script>
         <link rel="stylesheet" href="style.css" />
     </head>
     <body>
@@ -18,6 +19,7 @@
             <button onclick="deposit()">Create Deposit</button><br>
             <button onclick="register()">Count Register</button><br>
             <button onclick="createMasterReport()">Create Master Report</button><br>
+            <button onclick="doSequenceUI()">Run Sequence</button><br>
             <button onclick="clearMemory()">Erase Data</button><br>
         </div>
         <div id="numberPanel" hidden>
@@ -95,6 +97,17 @@
         <div id="finalUI" hidden>
             <button onclick="window.print()">Print</button><br>
             <button onclick="closeMaster()">Close</button><br>
+        </div>
+        <div id="sequenceUI" hidden>
+            <h2>Select actions for sequence</h2>
+            <input type="checkbox" id="seq_tablets" />Tablets<br>
+            <input type="checkbox" id="seq_tips" />Tips<br>
+            <input type="checkbox" id="seq_z1" />Z1 Report<br>
+            <input type="checkbox" id="seq_cc" />CC Report<br>
+            <input type="checkbox" id="seq_dep" />Deposit<br>
+            <input type="checkbox" id="seq_reg" />Count Register<br>
+            <input type="checkbox" id="seq_master" />View Master Report<br>
+            <button onclick="runSequence()">Run Sequence</button>
         </div>
     </body>
 </html>

@@ -7,9 +7,9 @@ async function z1() {
     config.z1.ccTend = +(await awaitNumberInput());
     instructions.innerText = "Enter Cash In Drawer";
     config.z1.cashInDrawer = +(await awaitNumberInput());
-    config.z1.done = true;
+    config.completed.z1 = true;
     uploadValues();
-    closeToMain();
+    if (!sequenceRunning) closeToMain();
 }
 
 async function cc() {
@@ -19,9 +19,9 @@ async function cc() {
     config.cc.net = await awaitNumberInput();
     instructions.innerText = "Enter CC Tips";
     config.cc.tips = await awaitNumberInput();
-    config.cc.done = true;
+    config.completed.cc = true;
     uploadValues();
-    closeToMain();
+    if (!sequenceRunning) closeToMain();
 }
 
 var overrideReportCheck = false;
@@ -30,21 +30,21 @@ if (overrideReportCheck) {
     console.warn("Warning: overrideReportCheck is set to true");
 }
 async function deposit() {
-    if ((!config.z1.done || !config.cc.done || !tabletsDone) && !overrideReportCheck) {
-        if (!config.z1.done) {
+    if ((!config.completed.z1 || !config.completed.cc || !config.completed.tablets) && !overrideReportCheck) {
+        if (!config.completed.z1) {
             alert("Z1 report must be completed first");
         }
-        if (!config.cc.done) {
+        if (!config.completed.cc) {
             alert("CC report must be completed first");
         }
-        if (!tabletsDone) {
+        if (!config.completed.tablets) {
             alert("Tablet report must be completed first");
         }
         return;
     }
     hideEverything();
-    depositUI.show();
     readDepositValues();
+    depositUI.show();
 }
 
 function readDepositValues() {
@@ -53,7 +53,7 @@ function readDepositValues() {
     ccClover.innerText = Math.floor((ccActual)*100)/100;
     ccRegister.innerText = Math.floor((config.z1.ccTend)*100)/100;
     ccDiffOut.innerText = Math.floor((ccDiff)*100)/100;
-    salesNumber.innerText = Math.floor((config.z1.adjTtl + tabletReport.total)*100)/100;
+    salesNumber.innerText = Math.floor((config.z1.adjTtl + config.tablets.total)*100)/100;
     depositAmount.innerText = Math.floor((config.z1.cashInDrawer - config.cc.tips - config.z1.storePurchases)*100)/100;
     rawVals.children[0].innerText = `Adj. Total - ${config.z1.adjTtl}`;
     rawVals.children[1].innerText = `Misc1 Tender - ${config.z1.ccTend}`;
@@ -65,9 +65,9 @@ function readDepositValues() {
 async function storePurchases() {
     hideEverything();
     showNumberPanel();
-    instructions.innerText = "Enter Store Purchase Amount, Or 0 If Done";
     var spAmount = 0;
     while(true) {
+        instructions.innerText = `Enter Store Purchase Amount, Or 0 If Done (Current: ${roundCents(spAmount)})`;
         var newSPAmount = await awaitNumberInput();
         if (newSPAmount == 0) break;
         spAmount += newSPAmount;

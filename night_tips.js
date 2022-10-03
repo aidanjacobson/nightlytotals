@@ -2,6 +2,14 @@ async function nightTips() {
     hideMainMenu();
     tip3Back.show();
     nightTipsUI.removeAttribute("hidden");
+    renderTips();
+}
+
+function renderTips() {
+    if (config.completed.tips) {
+        tipSplitOut.innerText = config.tips.tipSplitOut;
+        remainingCents.innerText = config.tips.remainingCents;
+    }
 }
 
 async function endOfShiftTips() {
@@ -9,7 +17,7 @@ async function endOfShiftTips() {
     showNumberPanel();
     instructions.innerText = "Enter Cash Tip Amount (not including $3)";
     var cashTipAmount = +(await awaitNumberInput());
-    instructions.innerText = "Enter Credit Card Amount";
+    instructions.innerText = "Enter Credit Card Tip Amount";
     var ccTipAmount = +(await awaitNumberInput());
     var total = roundCents(cashTipAmount + ccTipAmount);
     instructions.innerText = "Enter Number Of People Split"
@@ -22,9 +30,9 @@ async function endOfShiftTips() {
     }
     var remain = total - Math.floor(total);
     remain = roundCents(remain);
-    console.log(total, split, remain);
-    tipSplitOut.innerText = `Suggested Tipout: ${tipSim.map(e=>`\$${e}`).join(", ")}`;
-    remainingCents.innerText = `Remain in jar: \$${remain}`;
+    config.tips.tipSplitOut = `Suggested Tipout: ${tipSim.map(e=>`\$${e}`).join(", ")}`;
+    config.tips.remainingCents = `Remain in jar: \$${remain}`;
+    config.completed.tips = true;
     uploadValues();
     nightTips();
 }
