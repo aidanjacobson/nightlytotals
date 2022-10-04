@@ -22,25 +22,17 @@ async function runSequence() {
     if (seq_tips.checked) await run_seq_tips();
     if (seq_z1.checked) await z1();
     if (seq_cc.checked) await cc();
-    if (seq_dep.checked) await run_seq_dep();
-    if (seq_reg.checked) await run_seq_reg();
+    if (seq_dep.checked) await run_seq_until_close();
+    if (seq_reg.checked) await run_seq_until_close();
     if (seq_master.checked) createMasterReport();
     sequenceRunning = false;
 }
 
 var resolveFunc = ()=>{};
 
-function run_seq_tips() {
+function run_seq_until_close() {
     return new Promise(function(resolve) {
         endOfShiftTips();
-        resolveFunc = function() {
-            resolve();
-        }
-    });
-}
-function run_seq_dep() {
-    return new Promise(function(resolve) {
-        deposit();
         resolveFunc = function() {
             resolve();
         }
