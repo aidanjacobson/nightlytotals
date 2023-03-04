@@ -81,12 +81,21 @@ function downloadValues() {
 window.addEventListener("load", function() {
     updateTime();
     downloadValues();
+    checkDates();
     renderTips();
     p3bcheck.onclick = function() {
         uploadValues();
     }
     Array.from(document.getElementsByClassName("masterhr")).forEach(e=>e.hide());
 })
+
+function checkDates() {
+    var now = new Date();
+    var dString = `${now.getMonth()+1}/${now.getDate()}/${now.getFullYear()-2000}`;
+    if (config.tablets.dateString && config.tablets.dateString != dString) {
+        alert("Warning! This content is out of date! Check dates and erase data if necessary");
+    }
+}
 
 function uploadValues() {
     config.completed.put3Back = p3bcheck.checked;
@@ -168,10 +177,10 @@ function convertTabletReport(tReport) {
         <h1>Tablet Totals ${tReport.dateString}</h1>
         <hr>
         <ul>
-            <li>ChowNow: \$${tReport.cn}</li>
-            <li>DoorDash: \$${tReport.dd}</li>
-            <li>UberEats: \$${tReport.ue}</li>
-            <li>GrubHub: \$${tReport.gh}</li>
+            <li>ChowNow: \$${roundCents(tReport.cn)}</li>
+            <li>DoorDash: \$${roundCents(tReport.dd)}</li>
+            <li>UberEats: \$${roundCents(tReport.ue)}</li>
+            <li>GrubHub: \$${roundCents(tReport.gh)}</li>
         </ul>
         <hr>
         Total: ${tReport.totalString}<br>
@@ -183,6 +192,7 @@ var doneWithTablets = function() {};
 
 async function totalTablet(name, instatotal=false) {
     if (instatotal) {
+        /*
         instructions.innerText = `Enter amount for ${name}`;
         var amount = await awaitNumberInput();
         instructions.innerText = `Enter second amount for ${name}, or 0 if done`;
@@ -192,11 +202,14 @@ async function totalTablet(name, instatotal=false) {
         }
         amount = +amount;
         return +amount; // I FUCKING LOVE PLUSSES
+        */
     } else {
-        instructions.innerText = `Enter new amount for ${name}, or 0 if done`;
         var amount = 0;
+        var last = 0;
         while(true) {
+            instructions.innerText = `Enter new amount for ${name}, or 0 if done (current: ${roundCents(amount)}, last: ${roundCents(last)})`;
             var newAmount = await awaitNumberInput();
+            last = newAmount;
             if (newAmount == "" || newAmount == 0) break;
             amount += +newAmount;
         }
