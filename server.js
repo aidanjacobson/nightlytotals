@@ -117,14 +117,18 @@ async function downloadReport() {
 }
 
 var lastReportOpen;
-async function openReport(reportNumber) {
+async function openReport(reportNumber, bypassHTML=false) {
     lastReportOpen = reportNumber;
     advanced.classList.add("hide");
-    reportListDiv.children[reportNumber*2].innerText = "Loading...";
-    reportListDiv.children[reportNumber*2].disabled = true;
+    if (!bypassHTML) {
+        reportListDiv.children[reportNumber*2].innerText = "Loading...";
+        reportListDiv.children[reportNumber*2].disabled = true;
+    }
     var configData = await getStorageBin(reportsList[reportNumber].fileName);
-    reportListDiv.children[reportNumber*2].innerText = reportsList[reportNumber].dateString;
-    reportListDiv.children[reportNumber*2].removeAttribute("disabled");
+    if (!bypassHTML) {
+        reportListDiv.children[reportNumber*2].innerText = reportsList[reportNumber].dateString;
+        reportListDiv.children[reportNumber*2].removeAttribute("disabled");
+    }
     browseUI.hide();
     viewReportUI.show();
     browseSales.innerText = Math.floor((configData.z1.adjTtl + configData.tablets.total)*100)/100;
