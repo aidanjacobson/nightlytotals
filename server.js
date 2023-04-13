@@ -11,14 +11,16 @@ async function submitReport() {
         if (!confirm("Are you sure you want to upload?")) return;
     }
     await getReportsList();
-    var fileName = "nightly.report." + reportsList.length;
+    var reportNum = reportsList.length;
+    var fileName = "nightly.report." + reportNum;
     reportsList = reportsList.filter(report=>report.fileName!=fileName);
     reportsList.push({fileName: fileName, timestamp: Date.now(), dateString: config.tablets.dateString});
     await setStorageBin(fileName, config);
     await setStorageBin("nightly.fileList", reportsList);
     submitBtn.removeAttribute("disabled");
     if (confirm("Successfully uploaded. Would you like to send this report to Marlene?")) {
-
+        await homeAssistantCall(reportNum);
+        alert("Successfully sent report.");
     }
 }
 
@@ -94,6 +96,7 @@ function setStorageBin(binName, jsonData) {
 }
 
 async function getReportsList() {
+    await doAccessCheck();
     reportsList = await getStorageBin("nightly.fileList");
     reportsList.sort(function(a, b) {
         return b.timestamp-a.timestamp;
@@ -188,14 +191,21 @@ async  function deleteReport() {
     downloadReport();
 }
 
-function homeAssistantCall(number) {
-    var x = new XMLHttpRequest();
-    x.open("POST", "https://aidanjacobson.duckdns.org:8123/api/services/notify/salesemail");
-    x.setRequestHeader("Authorization", `Bearer ${CryptoJS.AES.decrypt(encrypted_notify, localStorage.getItem("nightly_dpin")).toString(CryptoJS.enc.Utf8)}`);
-    x.setRequestHeader("Content-Type", "application/json");
-    x.send({
-        title: "New Nightly Report Created",
-        message: "View it here: https://aidanjacobson.github.io/nightlytotals/?report=" + i,
-        target: "survivalking4@gmail.com"
+async function homeAssistantCall(number) {
+    return new Promise(function(resolve) {
+        var x = new XMLHttpRequest();
+        x.open("POST", "https://aidanjacobson.duckdns.org:8123/api/services/notify/salesemail");
+        x.setRequestHeader("Authorization", `Bearer ${CryptoJS.AES.decrypt(encrypted_notify, "accesscode_" + localStorage.getItem("nightly_dpin")).toString(CryptoJS.enc.Utf8)}`);
+        x.setRequestHeader("Content-Type", "application/json");
+        x.send(JSON.stringify({
+            title: "New Nightly Report Created",
+            message: "View it here: https://aidanjacobson.github.io/nightlytotals/?report=" + number,
+            target: "survivalking4@gmail.com"
+        }));
+        return new Promise(function(resolve) {
+            x.onload = function() {
+                resolve();
+            }
+        })
     });
 }
