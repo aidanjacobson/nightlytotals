@@ -59,7 +59,7 @@ var firstAttempt = true;
 async function askForPassword() {
     hideEverything();
     showNumberPanel();
-    instructions.innerText = (firstAttempt ? "" : "Incorrect pin. ") + "Enter Access Token (hint: Marlene's credit card login)";
+    instructions.innerText = (firstAttempt ? "" : "Incorrect pin. ") + "Enter Access Token (hint: Marlene's clover tablet login)";
     var dpin = await awaitNumberInput();
     firstAttempt = false;
     localStorage.setItem("nightly_dpin", dpin);
