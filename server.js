@@ -216,5 +216,9 @@ async function homeAssistantCall(number) {
 async function openReportFromMain(number) {
     await doAccessCheck();
     await getReportsList();
+    reportListDiv.innerHTML = "";
+    for (var i = 0; i < reportsList.length; i++) {
+        reportListDiv.innerHTML += `<button onclick="openReport(${i})">${reportsList[i].dateString}</button><br>`;
+    }
     openReport(number, true);
 }
