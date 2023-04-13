@@ -11,3 +11,15 @@ button {
 .countNum {
     width: 50px;
 }
+
+#mainMenu {
+    display: flex;
+}
+
+.column {
+    flex: 50%;
+}
+
+[hidden=true], .hide {
+    display: none !important;
+}

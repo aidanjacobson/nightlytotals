@@ -3,7 +3,6 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
         <script src="main_and_tablets.js"></script>
         <script src="night_tips.js"></script>
-        <script src="sales.js"></script>
         <script src="reports.js"></script>
         <script src="register.js"></script>
         <script src="sequence.js"></script>
@@ -14,45 +13,43 @@
     <body>
         <h1 id="timeShow"></h1>
         <div id="mainMenu">
-            <button onclick="showTabletsUI()">Tablets</button><br>
-            <button onclick="nightTips()">Tips</button><br>
-            <!-- <button onclick="sales()">Sales</button><br> -->
-            <button onclick="z1()">Z1 Report</button><br>
-            <button onclick="cc()">CC Report</button><br>
-            <button onclick="deposit()">Create Deposit</button><br>
-            <button onclick="register()">Count Register</button><br>
-            <button onclick="createMasterReport()">Create Master Report</button><br>
-            <button onclick="clearMemory()">Erase Data</button><br>
-            <button onclick="doSequenceUI()">Run Sequence</button><br>
-            <button onclick="submitReport()" disabled>Upload Report To Server</button><br>
-            <button onclick="downloadReport()">Download Report From Server</button><br>
+            <div class="column">
+                <button onclick="showTabletsUI()">Tablets</button><br>
+                <button onclick="nightTips()">Tips</button><br>
+                <button onclick="z1()">Z1 Report</button><br>
+                <button onclick="cc()">CC Report</button><br>
+                <button onclick="deposit()">Create Deposit</button><br>
+                <button onclick="register()">Count Register</button><br>
+                <button onclick="createMasterReport()">Create Master Report</button><br>
+            </div>
+            <div class="column">
+                <button onclick="clearMemory()">Erase Data</button><br>
+                <button onclick="submitReport()" id="submitBtn">Upload Report To Server</button><br>
+                <button onclick="downloadReport()">Download Report From Server</button><br>
+                <button onclick="doSequenceUI()">Run Sequence</button><br>
+            </div>
         </div>
-        <div id="numberPanel" hidden>
+        <div id="numberPanel">
             <p id="instructions"></p>
             <input type="number" id="numberInput" />
         </div>
-        <div id="tabletUI" hidden>
+        <div id="tabletUI">
             <button onclick="doTablets()">Input All Online Orders</button><br>
             <button onclick="tabletManual()">Input Totals</button><br>
             <button onclick="makeTabletReport()">Tablet Report</button><br>
             <button class="closer" onclick="closeToMain()">Close</button>
         </div>
-        <div id="tabletOutput" hidden"></div><hr class="masterhr" />
-        <div id="nightTipsUI" hidden>
+        <div id="tabletOutput""></div><hr class="masterhr" />
+        <div id="nightTipsUI">
             <p id="tipSplitOut"></p>
             <p id="remainingCents"></p>
             <button onclick="endOfShiftTips()">End Of Shift Tips</button><br>
             <button class="closer" onclick="closeToMain()">Close</button>
         </div>
-        <div id="tip3Back" hidden>
+        <div id="tip3Back">
             Put 3 back: <input type="checkbox" id="p3bcheck" />
         </div><hr class="masterhr" />
-        <div id="salesUI" hidden>
-            <button id="adjTtlBtn" onclick="adjTotal()">Set Adj. Total (current: $0)</button><br>
-            <button onclick="calcSales()">Calculate Sales</button><br>
-            <button class="closer" onclick="closeToMain()">Close</button><br>
-        </div>
-        <div id="depositUI" hidden>
+        <div id="depositUI">
             <ul>
                 <li>Credit Card:
                     <ul>
@@ -75,7 +72,7 @@
             </ul>
             <button class="closer" onclick="closeToMain()">Close</button><br>
         </div><hr class="masterhr" />
-        <div id="registerUI" hidden>
+        <div id="registerUI">
             <ul id="regInputList">
                 <li>$<input type="number" data-name="Big bills" class="countNum" onchange="regInputChange()" id="count_big" value="" /> - Big bills <u class="fakeLink" onclick="increment(event)">Increment</u> <u class="fakeLink" onclick="decrement(event)">Decrement</u></li>
                 <li>$<input type="number" data-name="$20s" class="countNum" onchange="regInputChange()" id="count_20" value="" /> - $20 <u class="fakeLink" onclick="increment(event)">Increment</u> <u class="fakeLink" onclick="decrement(event)">Decrement</u></li>
@@ -99,11 +96,11 @@
             </ul>
             <button class="closer" onclick="closeToMain()">Close</button><br>
         </div><hr class="masterhr" />
-        <div id="finalUI" hidden>
+        <div id="finalUI">
             <button onclick="window.print()">Print</button><br>
             <button onclick="closeMaster()">Close</button><br>
         </div>
-        <div id="sequenceUI" hidden>
+        <div id="sequenceUI">
             <h2>Select the actions to include in the sequence</h2>
             <input type="checkbox" id="seq_tablets" />Tablets<br>
             <input type="checkbox" id="seq_tips" />Tips<br>
@@ -113,6 +110,21 @@
             <input type="checkbox" id="seq_reg" />Count Register<br>
             <input type="checkbox" id="seq_master" />View Master Report<br>
             <button onclick="runSequence()">Run Sequence</button>
+        </div>
+        <div id="browseUI">
+            <button class="closer" onclick="closeToMain()">Close</button><br>
+            <h1>Click a button to browse that report.</h1>
+            <div id="reportListDiv"></div>
+        </div>
+        <div id="viewReportUI">
+            <button onclick="backToBrowse()">Back</button><br><br><br>
+            <h3>Sales: $<span id="browseSales"></span></h3>
+            <h3>Deposit: $<span id="browseDeposit"></span></h3>
+            <h3>Register: $<span id="browseRegister"></span></h3>
+            <br><br>
+            <button onclick="toggleAdvanced()">Toggle advanced view</button>
+            <div id="advanced"></div><br>
+            <button onclick="deleteReport()">Delete report</button>
         </div>
     </body>
 </html>
