@@ -1,11 +1,13 @@
 <html>
     <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
         <script src="main_and_tablets.js"></script>
         <script src="night_tips.js"></script>
         <script src="sales.js"></script>
         <script src="reports.js"></script>
         <script src="register.js"></script>
         <script src="sequence.js"></script>
+        <script src="server.js"></script>
         <link rel="stylesheet" href="style.css" />
         <title>Totals App</title>
     </head>
@@ -22,6 +24,8 @@
             <button onclick="createMasterReport()">Create Master Report</button><br>
             <button onclick="clearMemory()">Erase Data</button><br>
             <button onclick="doSequenceUI()">Run Sequence</button><br>
+            <button onclick="submitReport()" disabled>Upload Report To Server</button><br>
+            <button onclick="downloadReport()">Download Report From Server</button><br>
         </div>
         <div id="numberPanel" hidden>
             <p id="instructions"></p>
