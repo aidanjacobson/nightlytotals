@@ -1,7 +1,7 @@
 async function nightTips() {
     hideMainMenu();
     tip3Back.show();
-    nightTipsUI.removeAttribute("hidden");
+    nightTipsUI.show();
     renderTips();
 }
 
@@ -13,7 +13,7 @@ function renderTips() {
 }
 
 async function endOfShiftTips() {
-    nightTipsUI.setAttribute("hidden", true);
+    nightTipsUI.hide();
     showNumberPanel();
     instructions.innerText = "Enter Cash Tip Amount (not including $3)";
     var cashTipAmount = +(await awaitNumberInput());

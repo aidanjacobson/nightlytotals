@@ -3,7 +3,6 @@ var put3Back = false;
 function hideEverything() {
     hideMainMenu();
     nightTipsUI.hide();
-    salesUI.hide();
     hideNumberPanel();
     tabletOutput.hide();
     tip3Back.hide();
@@ -12,6 +11,8 @@ function hideEverything() {
     registerUI.hide();
     finalUI.hide();
     sequenceUI.hide();
+    browseUI.hide();
+    viewReportUI.hide();
 }
 
 function closeToMain() {
@@ -79,6 +80,7 @@ function downloadValues() {
     renderTips();
 }
 window.addEventListener("load", function() {
+    closeToMain();
     updateTime();
     downloadValues();
     checkDates();
@@ -87,6 +89,10 @@ window.addEventListener("load", function() {
         uploadValues();
     }
     Array.from(document.getElementsByClassName("masterhr")).forEach(e=>e.hide());
+    var params = new URLSearchParams(location.search);
+    if (params.has("report")) {
+        openReportFromMain(+params.get("report"));
+    }
 })
 
 function checkDates() {
@@ -110,20 +116,24 @@ function clearMemory() {
 }
 
 function hideMainMenu() {
-    mainMenu.setAttribute("hidden", true);
+    //mainMenu.setAttribute("hidden", true);
+    mainMenu.hide();
 }
 
 function showMainMenu() {
-    mainMenu.removeAttribute("hidden");
+    mainMenu.show();
+    //mainMenu.removeAttribute("hidden");
 }
 
 function showNumberPanel() {
-    numberPanel.removeAttribute("hidden");
+    //numberPanel.removeAttribute("hidden");
+    numberPanel.show();
     numberInput.focus();
 }
 
 function hideNumberPanel() {
-    numberPanel.setAttribute("hidden", true);
+    //numberPanel.setAttribute("hidden", true);
+    numberPanel.hide();
 }
 
 async function doTablets(calc=true) {
@@ -159,7 +169,7 @@ function makeTabletReport() {
 
 function displayTabletResults() {
     hideEverything();
-    tabletOutput.removeAttribute("hidden");
+    tabletOutput.show();
     tabletOutput.innerHTML = convertTabletReport(config.tablets);
     config.completed.tablets = true;
     uploadValues();
@@ -237,11 +247,13 @@ window.addEventListener("load", function() {
 });
 
 HTMLElement.prototype.hide = function() {
-    this.setAttribute("hidden", true);
+    //this.setAttribute("hidden", true);
+    this.classList.add("hide");
 }
 
 HTMLElement.prototype.show = function() {
-    this.removeAttribute("hidden");
+    this.classList.remove("hide");
+    //this.removeAttribute("hidden");
 }
 
 var timeString = "";
