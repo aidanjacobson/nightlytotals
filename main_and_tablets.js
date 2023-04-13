@@ -89,6 +89,10 @@ window.addEventListener("load", function() {
         uploadValues();
     }
     Array.from(document.getElementsByClassName("masterhr")).forEach(e=>e.hide());
+    var params = new URLSearchParams(location.search);
+    if (params.has("report")) {
+        openReportFromMain(+params.get("report"));
+    }
 })
 
 function checkDates() {

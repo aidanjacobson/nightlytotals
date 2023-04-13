@@ -183,7 +183,7 @@ Array.prototype.sum = function() {
     return total;
 }
 
-async  function deleteReport() {
+async function deleteReport() {
     if (!confirm("Are you sure you want to delete this report?")) return;
     reportsList.splice(lastReportOpen, 1);
     hideEverything();
@@ -208,4 +208,10 @@ async function homeAssistantCall(number) {
             }
         })
     });
+}
+
+async function openReportFromMain(number) {
+    await doAccessCheck();
+    await getReportsList();
+    openReport(number);
 }
