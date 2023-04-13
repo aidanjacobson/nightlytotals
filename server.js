@@ -96,7 +96,6 @@ function setStorageBin(binName, jsonData) {
 }
 
 async function getReportsList() {
-    await doAccessCheck();
     reportsList = await getStorageBin("nightly.fileList");
     reportsList.sort(function(a, b) {
         return b.timestamp-a.timestamp;
