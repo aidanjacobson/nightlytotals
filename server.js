@@ -217,5 +217,5 @@ async function homeAssistantCall(number) {
 async function openReportFromMain(number) {
     await doAccessCheck();
     await getReportsList();
-    openReport(number);
+    openReport(number, true);
 }
