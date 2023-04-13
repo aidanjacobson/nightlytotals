@@ -129,7 +129,7 @@ async function openReport(reportNumber, bypassHTML=false) {
         reportListDiv.children[reportNumber*2].innerText = reportsList[reportNumber].dateString;
         reportListDiv.children[reportNumber*2].removeAttribute("disabled");
     }
-    browseUI.hide();
+    hideEverything();
     viewReportUI.show();
     browseSales.innerText = Math.floor((configData.z1.adjTtl + configData.tablets.total)*100)/100;
     browseRegister.innerText = configData.register.values.sum();
