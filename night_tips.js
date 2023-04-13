@@ -20,7 +20,7 @@ async function endOfShiftTips() {
     instructions.innerText = "Enter Credit Card Tip Amount";
     var ccTipAmount = +(await awaitNumberInput());
     var total = roundCents(cashTipAmount + ccTipAmount);
-    instructions.innerText = "Enter Number Of People Split"
+    instructions.innerText = `($${Math.floor(total)}) Enter Number Of People Split`;
     var split = +(await awaitNumberInput());
     hideNumberPanel();
     var tipSim = new Array(split).fill(Math.floor(Math.floor(total)/split));

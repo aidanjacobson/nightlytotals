@@ -15,7 +15,7 @@ async function increment(event) {
     var currentValue = +event.target.previousElementSibling.value;
     instructions.innerText = `Increment ${event.target.previousElementSibling.getAttribute("data-name")} by how much?`;
     var amt = await awaitNumberInput();
-    event.target.previousElementSibling.value = currentValue + amt;
+    event.target.previousElementSibling.value = roundCents(currentValue + amt);
     hideNumberPanel();
     registerUI.show();
     regInputChange();
@@ -27,7 +27,7 @@ async function decrement(event) {
     var currentValue = +event.target.previousElementSibling.previousElementSibling.value;
     instructions.innerText = `Decrement ${event.target.previousElementSibling.previousElementSibling.getAttribute("data-name")} by how much?`;
     var amt = await awaitNumberInput();
-    event.target.previousElementSibling.previousElementSibling.value = currentValue - amt;
+    event.target.previousElementSibling.previousElementSibling.value = roundCents(currentValue - amt);
     hideNumberPanel();
     registerUI.show();
     regInputChange();
@@ -58,10 +58,8 @@ function inputsAreFilled() {
 }
 
 function regInputChange() {
-    if (inputsAreFilled()) {
-        readRegInputs();
-        uploadValues();
-    }
+    readRegInputs();
+    uploadValues();
 }
 
 function readRegInputs() {
@@ -71,7 +69,7 @@ function readRegInputs() {
     config.register.values = values(inputsArray);
     if (config.register.compared == "") config.register.compared = "Compare to last night"
     config.register.compared = lnDisp.innerText;
-    config.completed.register = true;
+    if (inputsAreFilled()) config.completed.register = true;
 }
 
 async function compareLastNight() {
@@ -79,7 +77,6 @@ async function compareLastNight() {
     showNumberPanel();
     instructions.innerText = "Enter last night";
     var defaultValue = 200;
-    if (config.register.compared != "") defaultValue = -config.register.compared.substring(24);
     var lastNight = await awaitNumberInput(defaultValue);
     hideNumberPanel();
     registerUI.show();
