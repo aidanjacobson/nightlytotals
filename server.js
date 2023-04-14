@@ -203,7 +203,7 @@ async function homeAssistantCall(number) {
         x.send(JSON.stringify({
             title: "New Nightly Report Created",
             message: "View it here: https://aidanjacobson.github.io/nightlytotals/?report=" + number,
-            target: "survivalking4@gmail.com"
+            target: "ordonezenterprisesllc@hotmail.com"
         }));
         return new Promise(function(resolve) {
             x.onload = function() {
