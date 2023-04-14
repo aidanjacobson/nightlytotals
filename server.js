@@ -215,7 +215,7 @@ async function homeAssistantCall(number) {
 
 async function openReportFromMain(number) {
     await doAccessCheck();
-    await downloadReports();
+    await downloadReport();
 /*
     await getReportsList();
     reportListDiv.innerHTML = "";
